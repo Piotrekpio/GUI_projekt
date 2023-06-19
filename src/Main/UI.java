@@ -7,6 +7,9 @@ public class UI {
     GameManager gm;
     JFrame window;
     public JTextArea messageText;
+    //player UI
+    JPanel statsPanel;
+    JTextArea healthTxt, atackTxt, defenceTxt, goldTxt;
     public JTextArea playerStatsText;
 
     //game over UI
@@ -20,7 +23,7 @@ public class UI {
         createMainField();
         createGameOverField();
         generateScene();
-        generatePlayerStats();
+        createPlayerStats();
         window.setVisible(true);
     }
 
@@ -92,19 +95,43 @@ public class UI {
         bgPanel[bgNum].add(arrowButton);
 
     }
-    public void generatePlayerStats(){
-        playerStatsText = new JTextArea();
-        playerStatsText.setBounds(50,10,700,30);
-        playerStatsText.setBackground(Color.blue);
-        playerStatsText.setForeground(Color.white);
-        playerStatsText.setEditable(false);
-        playerStatsText.setLineWrap(true);
-        playerStatsText.setWrapStyleWord(true);
-        playerStatsText.setFont(new Font("Book Antiqua", Font.PLAIN, 15));
-        window.add(playerStatsText);
+    private void setDefaultTxtArea(JTextArea textArea){
+        textArea.setBackground(Color.black);
+        textArea.setForeground(Color.white);
+        textArea.setEditable(false);
+        textArea.setFont(new Font("Book Antiqua", Font.PLAIN, 15));
     }
+
+    public void createPlayerStats(){
+        statsPanel = new JPanel();
+        statsPanel.setBounds(50, 10,400, 30);
+        statsPanel.setLayout(new GridLayout(1,8));
+        window.add(statsPanel);
+        //hp
+        healthTxt = new JTextArea("HP");
+        setDefaultTxtArea(healthTxt);
+        statsPanel.add(healthTxt);
+        //atack
+        atackTxt = new JTextArea("ATACK");
+        setDefaultTxtArea(atackTxt);
+        statsPanel.add(atackTxt);
+        //def
+        defenceTxt = new JTextArea("Def");
+        setDefaultTxtArea(defenceTxt);
+        statsPanel.add(defenceTxt);
+        //gold
+        goldTxt = new JTextArea("gold");
+        setDefaultTxtArea(goldTxt);
+        statsPanel.add(goldTxt);
+
+
+    }
+
     public void updatePlayerStats(){
-        playerStatsText.setText(gm.player.playerCurrentLife());
+        healthTxt.setText(gm.player.playerCurrentLife());
+        atackTxt.setText(gm.player.getPlayerAttack());
+        defenceTxt.setText(gm.player.getPlayerDefence());
+        goldTxt.setText(gm.player.getPlayerGold());
     }
 
     public void createGameOverField(){
