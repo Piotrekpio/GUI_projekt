@@ -1,5 +1,8 @@
 package Main;
 
+import item.SuperWeapon;
+import item.Weapon_1;
+
 public class Player {
     GameManager gm;
 
@@ -8,6 +11,8 @@ public class Player {
     public int playerAtack;
     public int playerDefence;
     public int playerGold;
+    //inventory
+    public SuperWeapon currentWeapon;
 
     public Player(GameManager gm){
         this.gm = gm;
@@ -15,15 +20,26 @@ public class Player {
     }
 
     public void setPlayerDefaultStatus(){
+        currentWeapon = new Weapon_1();
         playerMaxLife = 100;
         playerLife = 100;
-        playerAtack = 3;
+        playerAtack = currentWeapon.damage;
         playerDefence = 3;
         playerGold = 10;
+
     }
 
     public String playerCurrentLife(){
         return "HP: " + Integer.toString(playerLife) + "/" +Integer.toString(playerMaxLife);
+    }
+    public String getPlayerAttack(){
+        return Integer.toString(playerAtack);
+    }
+    public String getPlayerDefence(){
+        return Integer.toString(playerDefence);
+    }
+    public String getPlayerGold(){
+        return Integer.toString(playerGold);
     }
 
 }
