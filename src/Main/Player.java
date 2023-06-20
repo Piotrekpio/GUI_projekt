@@ -8,8 +8,9 @@ public class Player {
 
     public int playerLife;
     public int playerMaxLife;
-    public int playerAtack;
+    public int playerAttack;
     public int playerDefence;
+
     public int playerGold;
     //inventory
     public SuperWeapon currentWeapon;
@@ -23,7 +24,7 @@ public class Player {
         currentWeapon = new Weapon_1();
         playerMaxLife = 100;
         playerLife = 100;
-        playerAtack = currentWeapon.damage;
+        playerAttack = currentWeapon.damage;
         playerDefence = 3;
         playerGold = 10;
 
@@ -33,7 +34,7 @@ public class Player {
         return "HP: " + Integer.toString(playerLife) + "/" +Integer.toString(playerMaxLife);
     }
     public String getPlayerAttack(){
-        return Integer.toString(playerAtack);
+        return Integer.toString(playerAttack);
     }
     public String getPlayerDefence(){
         return Integer.toString(playerDefence);
