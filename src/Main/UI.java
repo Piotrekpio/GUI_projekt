@@ -148,9 +148,6 @@ public class UI {
         monsterPanel.setBounds(x, y,width, height);
         monsterPanel.setLayout(new GridLayout(1,5));
         bgPanel[bgNum].add(monsterPanel);
-        //window.add(monsterPanel);
-
-
 
         for(int i = 0; i<monsterButtons.length; i++){
             monsterButtons[i] = new JButton();
@@ -163,6 +160,7 @@ public class UI {
             monsterButtons[i].repaint();
             monsterButtons[i].addActionListener(gm.aHandler);
             monsterButtons[i].setActionCommand("selectMonster"+i);
+            monsterButtons[i].setEnabled(gm.mSel.monsterUnlocked(i));
             monsterPanel.add(monsterButtons[i]);
         }
     }
@@ -170,6 +168,7 @@ public class UI {
         for(int i = 0; i<monsterButtons.length; i++) {
             monsterButtons[i].setBackground(gm.mSel.monsterStatus(i));
             monsterButtons[i].repaint();
+            monsterButtons[i].setEnabled(gm.mSel.monsterUnlocked(i));
         }
     }
 
@@ -230,7 +229,7 @@ public class UI {
     public void redrawMonsterStats(){
         monsterStats.setText(gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getName() +":\n" +
                 "HP: " + gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getHP() +"/" + gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getMaxHP()
-                +"\nAtt: "+ gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getAttack());
+                +"\nAtt: "+ gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getMaxAttack());
     }
 
 
@@ -254,6 +253,10 @@ public class UI {
         createBackground(2, "shopBG700x350.png");
         createTransitionButton(2, 650, 150, 50, 50, "rightArrow50x50.png", "goHub");
         createPlayerStats(2);
+
+        gm.sUI.createShopSelection(2);
+        bgPanel[2].add(gm.sUI.selectPanel);
+        updatePlayerStats();
 
 
         bgPanel[2].add(bgLabel[2]);

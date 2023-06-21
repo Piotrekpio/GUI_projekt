@@ -67,15 +67,31 @@ public class Event1 {
 
     public void attackMonster(){
         int selectedMonster = gm.mSel.checkSelectedMonster();
-        gm.mSel.monsterTab[selectedMonster].hp -= gm.player.playerAttack;
-        if(gm.mSel.monsterTab[selectedMonster].hp > 1){
-            gm.player.playerLife -= gm.mSel.monsterTab[selectedMonster].attack;
+        int playerAttackPoints = (int)((Math.random()*(gm.player.playerMaxAttack-gm.player.playerMinAttack)+gm.player.playerMinAttack) - gm.mSel.monsterTab[selectedMonster].defence);
+        int monsterAttackPoints = (int)((Math.random()*(gm.mSel.monsterTab[selectedMonster].maxAttack-gm.mSel.monsterTab[selectedMonster].minAttack)+gm.mSel.monsterTab[selectedMonster].minAttack) - gm.player.playerDefence);
+        //player attack
+        gm.mSel.monsterTab[selectedMonster].hp -= playerAttackPoints;
+        if(gm.mSel.monsterTab[selectedMonster].hp > 0){
+            //monster attack
+            gm.player.playerLife -= monsterAttackPoints;
+            gm.ui.messageText.setText("You attacked the monster for: " + playerAttackPoints + "\n" + "Monster attacked you for: " + monsterAttackPoints);
         }
+        //monster defeated
         else {
             gm.sChanger.defeatedMonster();
-            gm.player.playerGold += gm.mSel.monsterTab[selectedMonster].goldLoot;
-        }
+            if (gm.mSel.monsterTab[selectedMonster].getStatusDefeated()){
+                gm.player.playerGold += (gm.mSel.monsterTab[selectedMonster].goldLoot)/2;
+                gm.ui.messageText.append("\nYou recived: " + (gm.mSel.monsterTab[selectedMonster].goldLoot)/2 + " gold!");
+            }
+            else {
+                gm.player.playerGold += gm.mSel.monsterTab[selectedMonster].goldLoot;
+                gm.ui.messageText.append("\nYou recived: " + gm.mSel.monsterTab[selectedMonster].goldLoot + " gold!");
+                gm.mSel.monsterTab[selectedMonster].setDefeated(true);
+            }
 
+            if (selectedMonster < 5) {gm.mSel.monsterTab[selectedMonster+1].setUnlocked(true);}
+        }
+        //player defeated
         if (gm.player.playerLife <= 0) {
             gm.sChanger.showGameOverScreen(3);
         }

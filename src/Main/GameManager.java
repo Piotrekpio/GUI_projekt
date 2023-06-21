@@ -7,6 +7,7 @@ public class GameManager {
 
     public Player player = new Player(this);
     public MonsterSelect mSel = new MonsterSelect(this);
+    public ShopUI sUI = new ShopUI(this);
     public UI ui = new UI(this);
 
     public Event1 ev1 = new Event1(this);

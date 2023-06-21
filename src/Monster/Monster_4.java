@@ -5,7 +5,8 @@ public class Monster_4 extends SuperMonster{
         name = "Nibba4";
         hp = 500;
         maxHP = 500;
-        attack = 50;
+        maxAttack = 50;
+        minAttack = 5;
         monsterIcon = "eel64x64.png";
         goldLoot = 10;
     }

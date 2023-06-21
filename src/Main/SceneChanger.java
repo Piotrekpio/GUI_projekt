@@ -13,6 +13,8 @@ public class SceneChanger {
         gm.ui.bgPanel[3].setVisible(false);
         gm.ui.messageText.setText("Main Hub");
         gm.ui.updatePlayerStats();
+        gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].setDefaultHP();
+        gm.ui.repaintMonsterChooser();
 
 
 

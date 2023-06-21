@@ -27,9 +27,15 @@ public class MonsterSelect {
         if (monsterTab[i].getStatusSelected()){
             return Color.green;
         }
+        else if (monsterTab[i].getStatusUnlocked()){
+            return Color.BLUE;
+        }
         else {
             return Color.gray;
         }
+    }
+    public boolean monsterUnlocked(int i){
+       return monsterTab[i].getStatusUnlocked();
     }
     public void newMonsterSelected(int selectedMonster){
         for (int i = 0; i < monsterTab.length; i++){
