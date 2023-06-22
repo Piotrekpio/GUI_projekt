@@ -13,6 +13,7 @@ public class SuperMonster {
     boolean isSelected = false;
     boolean isUnlocked = false;
     String monsterIcon;
+    public boolean hasShield;
 
     public void setDefaultHP(){
         this.hp = this.maxHP;

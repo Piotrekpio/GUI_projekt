@@ -1,12 +1,18 @@
 package Main;
 
 import javax.swing.*;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
-public class UI {
+public class UI implements ActionListener {
+
     GameManager gm;
     JFrame window;
     public JTextArea messageText;
+    public JButton arrowButton;
     //player UI
     JPanel statsPanel;
     JTextArea healthTxt, atackTxt, defenceTxt, goldTxt;
@@ -18,6 +24,7 @@ public class UI {
 
     //battle UI
     JLabel enemyIcon;
+    public JLabel shieldIcon;
     JPanel battlePanel;
     JButton attackButton, itemButton, runButton;
     JTextArea monsterStats;
@@ -25,13 +32,30 @@ public class UI {
     //game over UI
     public JLabel titleLabel;
     public JButton restartButton;
+    // game finished
+    public JLabel endLabel;
+    //main menu UI
+    public JLabel menuLabel;
+    public JButton startButton;
+    public JFormattedTextField levelSelect;
 
     public JPanel bgPanel[] = new JPanel[10];
     public JLabel bgLabel[] = new JLabel[10];
+
+    //animation
+    ImageIcon logo;
+    Timer timer;
+    int xVelocity = 10;
+    int yVelocity = 10;
+    int xAnimation = 10;
+    int yAnimation = 10;
+
     public UI(GameManager gm) {
         this.gm = gm;
         createMainField();
         createGameOverField();
+        createMainMenuField();
+        createGameFinishedField();
         generateScene();
 
         window.setVisible(true);
@@ -42,6 +66,8 @@ public class UI {
         window.setSize(800,600);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.getContentPane().setBackground(Color.black);
+        window.setLocationRelativeTo(null);
+        window.setResizable(false);
         window.setLayout(null);
 
         messageText = new JTextArea();
@@ -66,8 +92,6 @@ public class UI {
 
         ImageIcon bgIcon = new ImageIcon(getClass().getClassLoader().getResource(bgFileName));
         bgLabel[bgNum].setIcon(bgIcon);
-
-
     }
 
     public void createObject(int bgNum, int objx, int objy, int objWidth, int objHeight, String objFilename, String command) {
@@ -91,7 +115,7 @@ public class UI {
     public void createTransitionButton(int bgNum, int x, int y, int width, int height, String iconFileName, String command) {
         ImageIcon arrowIcon = new ImageIcon(getClass().getClassLoader().getResource(iconFileName));
 
-        JButton arrowButton = new JButton();
+        arrowButton = new JButton();
         arrowButton.setBounds(x,y, width, height);
         arrowButton.setBackground(null);
         arrowButton.setContentAreaFilled(false);
@@ -106,22 +130,24 @@ public class UI {
 
     }
 
-    public void createPlayerStats(int bgNum){
+
+    public void createGlobalPlayerStats(){
         playerStatsText = new JTextArea();
         playerStatsText.setBounds(0, 0, 100,100);
         playerStatsText.setBackground(Color.black);
         playerStatsText.setForeground(Color.white);
         playerStatsText.setEditable(false);
         playerStatsText.setFont(new Font("Book Antiqua", Font.PLAIN, 15));
-        bgPanel[bgNum].add(playerStatsText);
+        window.add(playerStatsText);
 
     }
 
     public void updatePlayerStats(){
         playerStatsText.setText(gm.player.playerCurrentLife()+ "\n"
-                +gm.player.getPlayerAttack()+"\n"
+                +gm.player.playerMinAttack + "-" + gm.player.playerMaxAttack+"\n"
                 +gm.player.getPlayerDefence()+"\n"
-                +gm.player.getPlayerGold());
+                +gm.player.getPlayerGold()+"\n"
+                +gm.player.getPlayerLevel());
     }
 
     public void createGameOverField(){
@@ -143,6 +169,60 @@ public class UI {
         restartButton.setVisible(false);
         window.add(restartButton);
     }
+    public void createGameFinishedField(){
+        endLabel = new JLabel("", JLabel.CENTER);
+        endLabel.setBounds(150, 50, 600, 300);
+        endLabel.setForeground(Color.green);
+        endLabel.setFont(new Font("Times New Roman", Font.PLAIN, 60));
+        endLabel.setVisible(false);
+        window.add(endLabel);
+
+        restartButton = new JButton();
+        restartButton.setBounds(340,320,120,50);
+        restartButton.setBorder(null);
+        restartButton.setForeground(Color.white);
+        restartButton.setBackground(null);
+        restartButton.setFocusPainted(false);
+        restartButton.addActionListener(gm.aHandler);
+        restartButton.setActionCommand("restart");
+        restartButton.setVisible(false);
+        window.add(restartButton);
+    }
+    public void createMainMenuField(){
+        menuLabel = new JLabel("", JLabel.CENTER);
+        menuLabel.setBounds(150, 150, 500, 200);
+        menuLabel.setForeground(Color.WHITE);
+        menuLabel.setFont(new Font("Times New Roman", Font.PLAIN, 70));
+        menuLabel.setVisible(false);
+        window.add(menuLabel);
+
+        NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Integer.class);
+        formatter.setMinimum(1);
+        formatter.setMaximum(1000);
+        formatter.setAllowsInvalid(false);
+        formatter.setCommitsOnValidEdit(true);
+        levelSelect = new JFormattedTextField(formatter);
+        levelSelect.setBounds(340,370,120,50);
+        levelSelect.setVisible(true);
+        levelSelect.setForeground(Color.black);
+        levelSelect.setValue(0);
+        window.add(levelSelect);
+
+        startButton = new JButton();
+        startButton.setBounds(340,320,120,50);
+        startButton.setBorder(null);
+        startButton.setForeground(Color.white);
+        startButton.setBackground(null);
+        startButton.setFocusPainted(false);
+        startButton.addActionListener(gm.aHandler);
+        startButton.setActionCommand("start");
+        startButton.setVisible(false);
+        window.add(startButton);
+    }
+
+
     public void createMonsterChooser(int bgNum, int x, int y, int width, int height){
         monsterPanel = new JPanel();
         monsterPanel.setBounds(x, y,width, height);
@@ -186,12 +266,12 @@ public class UI {
         attackButton.setActionCommand("attackMonster");
         battlePanel.add(attackButton);
 
-        itemButton = new JButton("Inventory");
+        itemButton = new JButton("Super Attack");
         itemButton.setContentAreaFilled(false);
         itemButton.setFocusPainted(false);
         itemButton.setFocusable(false);
         itemButton.addActionListener(gm.aHandler);
-        itemButton.setActionCommand("openInventory");
+        itemButton.setActionCommand("superAttack");
         battlePanel.add(itemButton);
 
         runButton = new JButton("Run away");
@@ -210,6 +290,15 @@ public class UI {
 
         ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource(gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getMonsterIcon()));
         enemyIcon.setIcon(icon);
+
+        shieldIcon = new JLabel();
+        shieldIcon.setBounds(500, 50, 128,128);
+        bgPanel[bgNum].add(shieldIcon);
+        ImageIcon shieldlogo = new ImageIcon(getClass().getClassLoader().getResource("checked-shield.png"));
+        shieldIcon.setIcon(shieldlogo);
+        shieldIcon.setVisible(false);
+
+
         }
     public void repaintEnemy(){
         ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource(gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getMonsterIcon()));
@@ -236,6 +325,9 @@ public class UI {
 
 
     public void generateScene(){
+        //createMainMenu(4);
+        createGlobalPlayerStats();
+
         //SCENE 1
         createBackground(1, "bg1.png");
         createObject(1,440,140, 128, 128, "porcupinefish.png", "greenFish");
@@ -243,8 +335,8 @@ public class UI {
         createTransitionButton(1, 0, 150, 50, 50, "shopArrow50x50.png", "goShop");
         createTransitionButton(1, 650, 150, 50, 50, "rightArrow50x50.png", "goBattle");
         createMonsterChooser(1, 190, 286, 320, 64);
-        createPlayerStats(1);
-        updatePlayerStats();
+
+
 
 
         bgPanel[1].add(bgLabel[1]);
@@ -252,14 +344,18 @@ public class UI {
         //SCENE 2
         createBackground(2, "shopBG700x350.png");
         createTransitionButton(2, 650, 150, 50, 50, "rightArrow50x50.png", "goHub");
-        createPlayerStats(2);
 
-        gm.sUI.createShopSelection(2);
+
+        gm.sUI.createShopSelection();
+        gm.sUI.consumablesPanel();
+        gm.sUI.createBuyDiscardButtons();
+        gm.sUI.createInventory();
         bgPanel[2].add(gm.sUI.selectPanel);
-        updatePlayerStats();
-
-
+        bgPanel[2].add(gm.sUI.buyOrDiscard);
+        bgPanel[2].add(gm.sUI.inventoryPanel);
+        bgPanel[2].add(gm.sUI.consumables);
         bgPanel[2].add(bgLabel[2]);
+
 
         //SCENE 3 Battle
         createBackground(3, "battleBG700x350.png");
@@ -267,11 +363,35 @@ public class UI {
         createBattleOptionButtons(3);
         drawEnemy(3);
         drawMonsterStats(3);
-        createPlayerStats(3);
 
         bgPanel[3].add(bgLabel[3]);
+        startTimer();
     }
 
 
+    public void startTimer(){
+        timer = new Timer(10, this);
+       // timer.start();
+    }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (xAnimation>= 500-128 || xAnimation<0){
+            xVelocity = xVelocity * -1;
+        }
+        xAnimation = xAnimation + xVelocity;
+
+        if (yAnimation>= 500-128 || yAnimation<0){
+            yVelocity = yVelocity * -1;
+        }
+        yAnimation = yAnimation + yVelocity;
+        System.out.println(xAnimation);
+
+        enemyIcon = new JLabel();
+        enemyIcon.setBounds(xAnimation, yAnimation, 128,128);
+        enemyIcon.setIcon(logo);
+        bgPanel[3].add(enemyIcon);
+
+
+    }
 }

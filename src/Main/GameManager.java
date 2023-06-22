@@ -18,7 +18,7 @@ public class GameManager {
     }
     public GameManager() {
         player.setPlayerDefaultStatus();
-        sChanger.showHub();
+        sChanger.showMainMenu();
 
     }
 

@@ -9,6 +9,7 @@ public class Monster_5 extends SuperMonster{
         minAttack = 5;
         monsterIcon = "shark-bite64x64.png";
         goldLoot = 10;
+        hasShield = true;
     }
 
 }

@@ -11,5 +11,6 @@ public class Monster_2 extends SuperMonster{
         minAttack = 5;
         monsterIcon = "aquarium64x64.png";
         goldLoot = 10;
+        hasShield = true;
     }
 }
