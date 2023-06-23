@@ -7,25 +7,20 @@ public class SceneChanger {
         this.gm = gm;
     }
 
-
     public void showHub(){
         gm.ui.bgPanel[1].setVisible(true);
         gm.ui.bgPanel[2].setVisible(false);
         gm.ui.bgPanel[3].setVisible(false);
-        //gm.ui.messageText.setText("Main Hub");
         gm.ui.updatePlayerStats();
         gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].setDefaultHP();
         gm.ui.repaintMonsterChooser();
         gm.player.refreshPlayerStats();
-
-
-
     }
     public void showShop(){
         gm.ui.bgPanel[1].setVisible(false);
         gm.ui.bgPanel[2].setVisible(true);
         gm.ui.bgPanel[3].setVisible(false);
-        gm.ui.messageText.setText("Bitches be shopping");
+        gm.ui.messageText.setText("Welcome to the shop");
         gm.ui.updatePlayerStats();
         gm.player.refreshPlayerStats();
     }
@@ -34,7 +29,7 @@ public class SceneChanger {
         gm.ui.bgPanel[1].setVisible(false);
         gm.ui.bgPanel[2].setVisible(false);
         gm.ui.bgPanel[3].setVisible(true);
-        gm.ui.messageText.setText("da battle");
+        gm.ui.messageText.setText("Its time for a battle");
         gm.ui.redrawMonsterStats();
         gm.ui.updatePlayerStats();
         gm.ui.arrowButton.setVisible(false);
@@ -51,6 +46,7 @@ public class SceneChanger {
         gm.ui.playerStatsText.setVisible(false);
         gm.ui.menuLabel.setVisible(true);
         gm.ui.menuLabel.setText("GUI projekt");
+        gm.ui.menuBackground.setVisible(true);
         gm.ui.startButton.setVisible(true);
         gm.ui.startButton.setText("NEW GAME");
         gm.ui.levelSelect.setVisible(true);
@@ -69,6 +65,8 @@ public class SceneChanger {
         gm.ui.levelSelect.setVisible(false);
         gm.ui.messageText.setVisible(true);
         gm.player.setPlayerLevel((int)gm.ui.levelSelect.getValue());
+        gm.ui.messageText.setText("Welcome to the main hub.");
+        gm.ui.menuBackground.setVisible(false);
         showHub();
 
     }
@@ -77,7 +75,7 @@ public class SceneChanger {
         gm.ui.bgPanel[currentBgNum].setVisible(false);
         gm.ui.playerStatsText.setVisible(false);
         gm.ui.titleLabel.setVisible(true);
-        gm.ui.titleLabel.setText("NIBBA U DIED");
+        gm.ui.titleLabel.setText("YOU DIED");
         gm.ui.restartButton.setVisible(true);
         gm.ui.restartButton.setText("Restart");
     }
@@ -91,7 +89,7 @@ public class SceneChanger {
         gm.ui.restartButton.setText("Go to main menu");
     }
     public void defeatedMonster(){
-        gm.ui.messageText.setText("You defeated the nibba fish");
+        gm.ui.messageText.setText("You defeated the "+gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].name);
         gm.ui.battlePanel.setVisible(false);
     }
 }

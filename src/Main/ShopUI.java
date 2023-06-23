@@ -35,7 +35,7 @@ public class ShopUI {
 
     public void createBuyDiscardButtons(){
         buyOrDiscard = new JPanel();
-        buyOrDiscard.setBounds(300, 300, 192, 128);
+        buyOrDiscard.setBounds(300, 300, 192, 64);
         buyOrDiscard.setLayout(new GridLayout(1,2));
 
         buyButton = new JButton("BUY");
@@ -51,7 +51,7 @@ public class ShopUI {
     public void consumablesPanel(){
 
         consumables = new JPanel();
-        consumables.setBounds(200,100,62,128);
+        consumables.setBounds(160,224,62,128);
         consumables.setLayout(new GridLayout(2,1));
 
         cardButton = new JButton();
@@ -92,7 +92,7 @@ public class ShopUI {
     }
     public void createShopSelection(){
         selectPanel = new JPanel();
-        selectPanel.setBounds(0,100,128,192);
+        selectPanel.setBounds(0,160,128,192);
         selectPanel.setLayout(new GridLayout(3,2));
 
 
@@ -137,17 +137,3 @@ public class ShopUI {
 
     }
 }
-/**
-            monsterButtons[i] = new JButton();
-                    monsterButtons[i].setBackground(gm.mSel.monsterStatus(i));
-                    monsterButtons[i].setContentAreaFilled(false);
-                    monsterButtons[i].setFocusPainted(false);
-                    monsterButtons[i].setFocusable(false);
-                    monsterButtons[i].setIcon(new ImageIcon(getClass().getClassLoader().getResource(gm.mSel.monsterTab[i].getMonsterIcon())));
-                    monsterButtons[i].setOpaque(true);
-                    monsterButtons[i].repaint();
-                    monsterButtons[i].addActionListener(gm.aHandler);
-                    monsterButtons[i].setActionCommand("selectMonster"+i);
-                    monsterButtons[i].setEnabled(gm.mSel.monsterUnlocked(i));
-                    monsterPanel.add(monsterButtons[i]);
- **/

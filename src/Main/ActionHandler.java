@@ -14,9 +14,6 @@ public class ActionHandler implements ActionListener {
         String yourChoice = e.getActionCommand();
 
         switch (yourChoice){
-            case "redFish": gm.ev1.redFish(); break;
-            case "greenFish": gm.ev1.greenFish(); break;
-
             //change scene
             case "goShop": gm.sChanger.showShop(); break;
             case "goHub": gm.sChanger.showHub(); break;
@@ -36,6 +33,7 @@ public class ActionHandler implements ActionListener {
             //battle screen
             case "attackMonster": gm.ev1.attackMonster(); break;
             case "runAway": gm.ev1.runAway(); break;
+            case "superAttack": gm.ev1.superAttack(); break;
             //shop UI
             case "buy": gm.ev1.buy(); break;
             case "discard": gm.ev1.discard(); break;

@@ -6,18 +6,13 @@ import java.awt.*;
 
 public class MonsterSelect {
     GameManager gm;
-
-    int currentMonster = 0;
     public SuperMonster monsterTab[] = new SuperMonster[5];
-
     public MonsterSelect(GameManager gm) {
         createMonsterTab();
         this.gm = gm;
-
     }
-
     public void createMonsterTab(){
-        monsterTab[0] = new Monster_Nibba();
+        monsterTab[0] = new Monster_1();
         monsterTab[1] = new Monster_2();
         monsterTab[2] = new Monster_3();
         monsterTab[3] = new Monster_4();
@@ -51,7 +46,4 @@ public class MonsterSelect {
         }
         return 0;
     }
-
-
-
 }

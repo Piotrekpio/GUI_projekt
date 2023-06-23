@@ -43,7 +43,7 @@ public class Player {
         playerMaxAttack = 10 + playerLevel;
         playerMinAttack = 5 + playerLevel;
         playerDefence = 5;
-        playerGold = 150;
+        playerGold = 0;
         hasWeapon = false;
         hasShield = false;
         hasFood = false;
@@ -75,7 +75,7 @@ public class Player {
     }
 
     public String playerCurrentLife(){
-        return "HP: " + Integer.toString(playerLife) + "/" +Integer.toString(playerMaxLife);
+        return playerLife + "/" +playerMaxLife;
     }
     public String getPlayerDefence(){
         return Integer.toString(playerDefence);

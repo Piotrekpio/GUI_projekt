@@ -9,13 +9,11 @@ public class MainMenuPanel extends JPanel implements ActionListener {
     final int PANEL_WIDTH = 600;
     final int PANEL_HEIGHT = 500;
     Image logo;
-    Image backgroundImage;
     Timer timer;
     int xVelocity = 10;
     int yVelocity = 10;
     int x = 10;
     int y = 10;
-    JLabel enemyIcon;
 
     MainMenuPanel(){
         this.setPreferredSize(new Dimension(PANEL_WIDTH,PANEL_HEIGHT));

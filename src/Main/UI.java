@@ -14,13 +14,14 @@ public class UI implements ActionListener {
     public JTextArea messageText;
     public JButton arrowButton;
     //player UI
-    JPanel statsPanel;
-    JTextArea healthTxt, atackTxt, defenceTxt, goldTxt;
     JTextArea playerStatsText;
 
     //monster chooser panel
     JPanel monsterPanel;
     JButton monsterButtons[] = new JButton[5];
+    //consumables
+    public JLabel cardIcon;
+    public JLabel superAttackIcon;
 
     //battle UI
     JLabel enemyIcon;
@@ -35,7 +36,8 @@ public class UI implements ActionListener {
     // game finished
     public JLabel endLabel;
     //main menu UI
-    public JLabel menuLabel;
+    public JLabel menuLabel, menuBackgroundIcon;
+    public JPanel menuBackground;
     public JButton startButton;
     public JFormattedTextField levelSelect;
 
@@ -72,7 +74,7 @@ public class UI implements ActionListener {
 
         messageText = new JTextArea();
         messageText.setBounds(50,410,700,150);
-        messageText.setBackground(Color.blue);
+        messageText.setBackground(Color.DARK_GRAY);
         messageText.setForeground(Color.white);
         messageText.setEditable(false);
         messageText.setLineWrap(true);
@@ -133,8 +135,9 @@ public class UI implements ActionListener {
 
     public void createGlobalPlayerStats(){
         playerStatsText = new JTextArea();
-        playerStatsText.setBounds(0, 0, 100,100);
-        playerStatsText.setBackground(Color.black);
+        playerStatsText.setBounds(50, 50, 100,120);
+        playerStatsText.setBackground(null);
+        playerStatsText.setOpaque(false);
         playerStatsText.setForeground(Color.white);
         playerStatsText.setEditable(false);
         playerStatsText.setFont(new Font("Book Antiqua", Font.PLAIN, 15));
@@ -143,11 +146,11 @@ public class UI implements ActionListener {
     }
 
     public void updatePlayerStats(){
-        playerStatsText.setText(gm.player.playerCurrentLife()+ "\n"
-                +gm.player.playerMinAttack + "-" + gm.player.playerMaxAttack+"\n"
-                +gm.player.getPlayerDefence()+"\n"
-                +gm.player.getPlayerGold()+"\n"
-                +gm.player.getPlayerLevel());
+        playerStatsText.setText("Player Stats:\n"+"      "+gm.player.playerCurrentLife()+ "\n"
+                +"      "+gm.player.playerMinAttack + "-" + gm.player.playerMaxAttack+"\n"
+                +"      "+gm.player.getPlayerDefence()+"\n"
+                +"      "+gm.player.getPlayerGold()+"\n"
+                +"      "+gm.player.getPlayerLevel());
     }
 
     public void createGameOverField(){
@@ -189,10 +192,12 @@ public class UI implements ActionListener {
         window.add(restartButton);
     }
     public void createMainMenuField(){
+
+
         menuLabel = new JLabel("", JLabel.CENTER);
         menuLabel.setBounds(150, 150, 500, 200);
         menuLabel.setForeground(Color.WHITE);
-        menuLabel.setFont(new Font("Times New Roman", Font.PLAIN, 70));
+        menuLabel.setFont(new Font("Times New Roman", Font.ITALIC, 70));
         menuLabel.setVisible(false);
         window.add(menuLabel);
 
@@ -206,6 +211,7 @@ public class UI implements ActionListener {
         levelSelect = new JFormattedTextField(formatter);
         levelSelect.setBounds(340,370,120,50);
         levelSelect.setVisible(true);
+        levelSelect.setFont(new Font("Book Antiqua", Font.PLAIN, 30));
         levelSelect.setForeground(Color.black);
         levelSelect.setValue(0);
         window.add(levelSelect);
@@ -214,12 +220,24 @@ public class UI implements ActionListener {
         startButton.setBounds(340,320,120,50);
         startButton.setBorder(null);
         startButton.setForeground(Color.white);
-        startButton.setBackground(null);
+        startButton.setBackground(Color.blue);
         startButton.setFocusPainted(false);
         startButton.addActionListener(gm.aHandler);
         startButton.setActionCommand("start");
         startButton.setVisible(false);
         window.add(startButton);
+
+        menuBackground = new JPanel();
+        menuBackground.setBounds(0,0,800,600);
+        menuBackground.setBackground(Color.yellow);
+        window.add(menuBackground);
+        menuBackground.setVisible(true);
+        menuBackgroundIcon = new JLabel();
+        menuBackgroundIcon.setBounds(0,0,800,600);
+        menuBackground.add(menuBackgroundIcon);
+
+        ImageIcon bgIcon = new ImageIcon(getClass().getClassLoader().getResource("menu_background.png"));
+        menuBackgroundIcon.setIcon(bgIcon);
     }
 
 
@@ -254,7 +272,7 @@ public class UI implements ActionListener {
 
     public void createBattleOptionButtons(int bgNum){
         battlePanel = new JPanel();
-        battlePanel.setBounds(200, 286, 300, 64);
+        battlePanel.setBounds(150, 286, 400, 64);
         battlePanel.setLayout(new GridLayout(1,3));
         bgPanel[bgNum].add(battlePanel);
 
@@ -297,9 +315,25 @@ public class UI implements ActionListener {
         ImageIcon shieldlogo = new ImageIcon(getClass().getClassLoader().getResource("checked-shield.png"));
         shieldIcon.setIcon(shieldlogo);
         shieldIcon.setVisible(false);
-
-
         }
+
+    public void drawConsumables(int bgNum){
+        cardIcon = new JLabel();
+        cardIcon.setBounds(286, 0, 128,128);
+        bgPanel[bgNum].add(cardIcon);
+
+        ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("card.png"));
+        cardIcon.setIcon(icon);
+        cardIcon.setVisible(false);
+
+        superAttackIcon = new JLabel();
+        superAttackIcon.setBounds(350, 0, 128,128);
+        bgPanel[bgNum].add(superAttackIcon);
+        ImageIcon attackLogo = new ImageIcon(getClass().getClassLoader().getResource("superAttack.png"));
+        superAttackIcon.setIcon(attackLogo);
+        superAttackIcon.setVisible(false);
+    }
+
     public void repaintEnemy(){
         ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource(gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getMonsterIcon()));
         enemyIcon.setIcon(icon);
@@ -308,17 +342,19 @@ public class UI implements ActionListener {
 
     public void drawMonsterStats(int bgNum){
         monsterStats = new JTextArea();
-        monsterStats.setBounds(600,0,100,200);
-        monsterStats.setBackground(Color.black);
+        monsterStats.setBounds(600,0,100,95);
+        monsterStats.setOpaque(false);
         monsterStats.setForeground(Color.white);
         monsterStats.setEditable(false);
         monsterStats.setFont(new Font("Book Antiqua", Font.PLAIN, 15));
         bgPanel[bgNum].add(monsterStats);
     }
     public void redrawMonsterStats(){
-        monsterStats.setText(gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getName() +":\n" +
-                "HP: " + gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getHP() +"/" + gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getMaxHP()
-                +"\nAtt: "+ gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getMaxAttack());
+        monsterStats.setText("Enemy stats:\n" +
+                "      "+ gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getHP() +"/" + gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getMaxHP()
+                +"\n"+"      "+ gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].getMaxAttack()
+                +"\n"+"      "+ gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].defence
+                +"\n"+"      "+ gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].goldLoot);
     }
 
 
@@ -330,8 +366,6 @@ public class UI implements ActionListener {
 
         //SCENE 1
         createBackground(1, "bg1.png");
-        createObject(1,440,140, 128, 128, "porcupinefish.png", "greenFish");
-        createObject(1,100,140, 128, 128, "flatfish.png", "redFish");
         createTransitionButton(1, 0, 150, 50, 50, "shopArrow50x50.png", "goShop");
         createTransitionButton(1, 650, 150, 50, 50, "rightArrow50x50.png", "goBattle");
         createMonsterChooser(1, 190, 286, 320, 64);
@@ -350,6 +384,7 @@ public class UI implements ActionListener {
         gm.sUI.consumablesPanel();
         gm.sUI.createBuyDiscardButtons();
         gm.sUI.createInventory();
+        drawConsumables(2);
         bgPanel[2].add(gm.sUI.selectPanel);
         bgPanel[2].add(gm.sUI.buyOrDiscard);
         bgPanel[2].add(gm.sUI.inventoryPanel);
@@ -363,6 +398,7 @@ public class UI implements ActionListener {
         createBattleOptionButtons(3);
         drawEnemy(3);
         drawMonsterStats(3);
+        drawConsumables(3);
 
         bgPanel[3].add(bgLabel[3]);
         startTimer();

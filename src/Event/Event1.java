@@ -10,43 +10,22 @@ public class Event1 {
     public Event1(GameManager gm){
         this.gm = gm;
     }
-
-    public void redFish(){
-        gm.ui.messageText.setText("red fish");
-        gm.player.playerLife -= 5;
-        if (gm.player.playerLife <= 0) {
-            gm.sChanger.showGameOverScreen(1);
-        }
-        gm.ui.updatePlayerStats();
-
-    }
-    public void greenFish(){
-        gm.ui.messageText.setText("green fish");
-        if (gm.player.playerLife<100){
-            gm.player.playerLife += 1;
-        }
-        else gm.ui.messageText.setText("Full health");
-        gm.ui.updatePlayerStats();
-
-
-    }
-
     public void selectMonster0(){
-        gm.ui.messageText.setText("nibba fish 1 selected");
+        gm.ui.messageText.setText(gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].name + " selected");
         gm.mSel.newMonsterSelected(0);
         gm.ui.repaintMonsterChooser();
         gm.ui.repaintEnemy();
 
     }
     public void selectMonster1(){
-        gm.ui.messageText.setText("nibba fish 2 selected");
+        gm.ui.messageText.setText(gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].name + " selected");
         gm.mSel.newMonsterSelected(1);
         gm.ui.repaintMonsterChooser();
         gm.ui.repaintEnemy();
 
     }
     public void selectMonster2(){
-        gm.ui.messageText.setText("nibba fish 3 selected");
+        gm.ui.messageText.setText(gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].name + " selected");
         gm.mSel.newMonsterSelected(2);
         gm.ui.repaintMonsterChooser();
         gm.ui.repaintEnemy();
@@ -54,14 +33,14 @@ public class Event1 {
 
     }
     public void selectMonster3(){
-        gm.ui.messageText.setText("nibba fish 4 selected");
+        gm.ui.messageText.setText(gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].name + " selected");
         gm.mSel.newMonsterSelected(3);
         gm.ui.repaintMonsterChooser();
         gm.ui.repaintEnemy();
 
     }
     public void selectMonster4(){
-        gm.ui.messageText.setText("nibba fish 5 selected");
+        gm.ui.messageText.setText(gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].name + " selected");
         gm.mSel.newMonsterSelected(4);
         gm.ui.repaintMonsterChooser();
         gm.ui.repaintEnemy();
@@ -82,7 +61,11 @@ public class Event1 {
             gm.ui.messageText.setText("You destroyed monsters shield." +"\n" + "Monster attacked you for: " + monsterAttackPoints);
             gm.mSel.monsterTab[selectedMonster].hasShield = false;
         }
-        else{gm.mSel.monsterTab[selectedMonster].hp -= playerAttackPoints;
+        else{
+            if(playerAttackPoints<1){
+                playerAttackPoints = 1;
+            }
+            gm.mSel.monsterTab[selectedMonster].hp -= playerAttackPoints;
             if(gm.mSel.monsterTab[selectedMonster].hp > 0){
                 //monster attack
                 gm.player.playerLife -= monsterAttackPoints;
@@ -111,6 +94,7 @@ public class Event1 {
                 if (selectedMonster < 4) {
                     gm.mSel.monsterTab[selectedMonster+1].setUnlocked(true);
                     gm.ui.arrowButton.setVisible(true);
+                    gm.player.refreshPlayerStats();
                 }
             }}
 
@@ -125,6 +109,7 @@ public class Event1 {
         if(gm.player.hasCard){
             gm.player.hasCard = false;
             gm.ui.messageText.setText("You used your card and run away safely.");
+            gm.ui.cardIcon.setVisible(false);
             gm.sChanger.showHub();
         }
         else if(!gm.player.hasWeapon && !gm.player.hasShield){
@@ -154,6 +139,19 @@ public class Event1 {
         }
         gm.sChanger.showHub();
 
+    }
+    public void superAttack(){
+        int playerSuperAttack = (int)((Math.random()*(gm.player.playerMaxAttack-gm.player.playerMinAttack)+gm.player.playerMinAttack) - gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].defence)*5;
+        if(gm.player.hasSuperAttack) {
+            gm.player.hasSuperAttack = false;
+            gm.ui.messageText.setText("You used your super attack and dealt " + playerSuperAttack + " damage!");
+            gm.ui.superAttackIcon.setVisible(false);
+            gm.mSel.monsterTab[gm.mSel.checkSelectedMonster()].hp -= playerSuperAttack;
+            gm.ui.redrawMonsterStats();
+        }
+        else{
+            gm.ui.messageText.setText("You dont have super attack item.");
+        }
     }
 
     public void buy(){
@@ -254,6 +252,30 @@ public class Event1 {
                     }
                     gm.ui.updatePlayerStats();
                 }
+                break;
+            case "card":
+                if (gm.player.hasCard){
+                    gm.ui.messageText.setText("You already have this item.");
+                }
+                else if(gm.player.playerGold >= gm.sUI.card.cost) {
+                    gm.ui.cardIcon.setVisible(true);
+                    gm.player.hasCard = true;
+                    gm.player.playerGold = gm.player.playerGold - gm.sUI.card.cost;
+                    gm.ui.messageText.setText("You bought a card.");
+                }
+                else gm.ui.messageText.setText("You dont have enough money.");
+                break;
+            case "superAttack":
+                if (gm.player.hasSuperAttack){
+                    gm.ui.messageText.setText("You already have this item.");
+                }
+                else if(gm.player.playerGold >= gm.sUI.superAttack.cost) {
+                    gm.ui.superAttackIcon.setVisible(true);
+                    gm.player.hasSuperAttack = true;
+                    gm.player.playerGold = gm.player.playerGold - gm.sUI.superAttack.cost;
+                    gm.ui.messageText.setText("You bought a single use super attack.");
+                }
+                else gm.ui.messageText.setText("You dont have enough money.");
                 break;
         }
 
